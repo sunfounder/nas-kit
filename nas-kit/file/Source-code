@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 cat <<EOF >> /etc/apt/sources.list.d/openmediavault.list

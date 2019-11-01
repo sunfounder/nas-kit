@@ -1,3 +1,6 @@
+
+errors = []
+
 def run_command(cmd=""):
     import subprocess
     p = subprocess.Popen(
@@ -8,19 +11,56 @@ def run_command(cmd=""):
     # print(status)
     return status, result
 
-def install():
-    run_command(cmd="cat <<EOF >> /etc/apt/sources.list.d/openmediavault.list\
-deb https://packages.openmediavault.org/public usul main\
-# deb https://downloads.sourceforge.net/project/openmediavault/packages usul main\
-## Uncomment the following line to add software from the proposed repository.\
-# deb https://packages.openmediavault.org/public usul-proposed main\
-# deb https://downloads.sourceforge.net/project/openmediavault/packages usul-proposed main\
-## This software is not part of OpenMediaVault, but is offered by third-party\
-## developers as a service to OpenMediaVault users.\
-# deb https://packages.openmediavault.org/public usul partner\
-# deb https://downloads.sourceforge.net/project/openmediavault/packages usul partner\
-EOF")
+def do(msg="", cmd=""):
+    print(" - %s..." % (msg), end='\r')
+    print(" - %s... " % (msg), end='')
+    status, result = eval(cmd)
+    # print(status, result)
+    if status == 0 or status == None or result == "":
+        print('Done')
+    else:
+        print('Error')
+        errors.append("%s error:\n  Status:%s\n  Error:%s" %
+                      (msg, status, result))
 
-    run_command("sudo ./Nas-build")
+def install():
+    do(msg="wget BCM2835",
+        cmd='run_command("wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz")')
+    do(msg="tar and make install BCM2835",
+        cmd='run_command("tar zxvf bcm2835-1.60.tar.gz && cd bcm2835-1.60/ && sudo ./configure && sudo make && sudo make check && sudo make install")')
+    do(msg="install wiringpi",
+        cmd='run_command("sudo apt-get install wiringpi && cd /tmp && wget https://project-downloads.drogon.net/wiringpi-latest.deb && sudo dpkg -i wiringpi-latest.deb")')
+    do(msg="apt-get update",
+        cmd='run_command("sudo apt-get update")')
+    do(msg="apt-get install python3-pip",
+        cmd='run_command("sudo apt-get install python3-pip")')
+    do(msg="apt-get install python3-pil",
+        cmd='run_command("sudo apt-get install python3-pil")')
+    do(msg="apt-get install python3-numpy",
+        cmd='run_command("sudo apt-get install python3-numpy")')
+    do(msg="apt-get install RPi.GPIO",
+        cmd='run_command("sudo pip3 install RPi.GPIO")')
+    do(msg="apt-get install spidev",
+        cmd='run_command("sudo pip3 install spidev")')
+### Setup OMV env and install OMV
+    do(msg="Nas-build",
+        cmd='run_command("sudo ./Nas-build")')
+    do(msg="install openmediavault",
+        cmd='run_command("sudo apt-get install openmediavault-keyring openmediavault")')
+    do(msg="Populate the database",
+        cmd='run_command("omv-confdbadm populate")')
+
+### install epd
+    do(msg="install nas-kit",
+        cmd='run_command("sudo git clone https://github.com/sunfounder/nas-kit")')
+        
+    if len(errors) == 0:
+        print("Finished")
+    else:
+        print("\n\nError happened in install process:")
+        for error in errors:
+            print(error)
+        print("Try to fix it yourself, or contact service@sunfounder.com with this message")
+
 if __name__ =="__main__":
     install()
