@@ -133,8 +133,6 @@ def fan_power_read():
 def fan_led_stop():
     fan_pwm_pin.ChangeDutyCycle(0)
     led_pwm_pin.ChangeDutyCycle(0)  
-    # fan_pwm_pin.stop()
-    # led_pwm_pin.stop()
     GPIO.cleanup()
 
 def getIP(ifaces=['wlan0', 'eth0']):

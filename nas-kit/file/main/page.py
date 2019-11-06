@@ -25,6 +25,7 @@ epd = epd2in13_V2.EPD()
 
 font = lambda x: ImageFont.truetype(os.path.join(fontdir, 'consola.ttf'), x)
 
+#Page class
 class Page():
     def __init__(self, background_color):
         self.background_color = background_color

@@ -13,11 +13,11 @@ apt-get update
 # 	--option DPkg::Options::="--force-confold" \
 # 	install openmediavault-keyring openmediavault
 
-# apt-get --yes --show-upgraded \
-# 	--allow-downgrades --allow-change-held-packages \
-# 	--no-install-recommends \
-# 	--option Dpkg::Options::="--force-confdef" \
-# 	--option DPkg::Options::="--force-confold" \
+apt-get --yes --show-upgraded \
+	--allow-downgrades --allow-change-held-packages \
+	--no-install-recommends \
+	--option Dpkg::Options::="--force-confdef" \
+	--option DPkg::Options::="--force-confold" \
 # 	install openmediavault-keyring openmediavault
 # Populate the database.
 # omv-confdbadm populate

@@ -112,7 +112,7 @@ def KEY_OK_FUNC(KEY_OK):
         if page_mode_val == 0:
             last_page = -1 
 
-
+#Menu class
 class Menu_item_templates():
     global back_button_press_val,last_page,current_page,ok_button_press_val,\
     menu_button_val,Menu_item_len,Menu_item_dict,menu_image,menu_draw

@@ -24,6 +24,8 @@ def do(msg="", cmd=""):
                       (msg, status, result))
 
 def install():
+
+    ### Rpi lib    
     do(msg="wget BCM2835",
         cmd='run_command("wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz")')
     do(msg="tar and make install BCM2835",
@@ -34,25 +36,34 @@ def install():
         cmd='run_command("sudo apt-get update")')
     do(msg="apt-get install python3-pip",
         cmd='run_command("sudo apt-get install python3-pip")')
+    do(msg="apt-get install sysstat",
+        cmd='run_command("sudo apt-get install sysstat")')
     do(msg="apt-get install python3-pil",
-        cmd='run_command("sudo apt-get install python3-pil")')
+        cmd='run_command("sudo apt-get install python3-pil -y")')
     do(msg="apt-get install python3-numpy",
-        cmd='run_command("sudo apt-get install python3-numpy")')
+        cmd='run_command("sudo apt-get install python3-numpy -y")')
     do(msg="apt-get install RPi.GPIO",
-        cmd='run_command("sudo pip3 install RPi.GPIO")')
+        cmd='run_command("sudo pip3 install RPi.GPIO -y")')
     do(msg="apt-get install spidev",
-        cmd='run_command("sudo pip3 install spidev")')
-### Setup OMV env and install OMV
-    do(msg="Nas-build",
-        cmd='run_command("sudo ./Nas-build")')
-    do(msg="install openmediavault",
-        cmd='run_command("sudo apt-get install openmediavault-keyring openmediavault")')
-    do(msg="Populate the database",
-        cmd='run_command("omv-confdbadm populate")')
+        cmd='run_command("sudo pip3 install spidev -y")')
 
-### install epd
+### install epd_code
     do(msg="install nas-kit",
         cmd='run_command("sudo git clone https://github.com/sunfounder/nas-kit")')
+
+### Setup OMV env and install OMV
+    do(msg="Enter-file",
+        cmd='run_command("cd nas-kit/file")')
+    do(msg="Nas-Source",
+        cmd='run_command("sudo chmod 777 Source-code && sudo ./Source-code")')
+    do(msg="Nas-deb-setup",
+        cmd='run_command("sudo chmod 777 Nas-build && sudo ./Nas-build")')
+    do(msg="install openmediavault",
+        cmd='run_command("sudo apt-get install openmediavault-keyring openmediavault -y")')
+    do(msg="Populate the database",
+        cmd='run_command("sudo omv-confdbadm populate")')
+
+
         
     if len(errors) == 0:
         print("Finished")
