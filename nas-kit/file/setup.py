@@ -35,31 +35,31 @@ def install():
     do(msg="apt-get update",
         cmd='run_command("sudo apt-get update")')
     do(msg="apt-get install python3-pip",
-        cmd='run_command("sudo apt-get install python3-pip")')
+        cmd='run_command("sudo apt-get install python3-pip -y")')
     do(msg="apt-get install sysstat",
-        cmd='run_command("sudo apt-get install sysstat")')
+        cmd='run_command("sudo apt-get install sysstat -y")')
     do(msg="apt-get install python3-pil",
         cmd='run_command("sudo apt-get install python3-pil -y")')
     do(msg="apt-get install python3-numpy",
         cmd='run_command("sudo apt-get install python3-numpy -y")')
-    do(msg="apt-get install RPi.GPIO",
-        cmd='run_command("sudo pip3 install RPi.GPIO -y")')
-    do(msg="apt-get install spidev",
-        cmd='run_command("sudo pip3 install spidev -y")')
+    do(msg="pip3 install RPi.GPIO",
+        cmd='run_command("sudo pip3 install RPi.GPIO")')
+    do(msg="pip3 install spidev",
+        cmd='run_command("sudo pip3 install spidev")')
 
 ### install epd_code
-    do(msg="install nas-kit",
-        cmd='run_command("cd ~")')
+    # do(msg="install nas-kit",
+    #     cmd='run_command("cd ~")')
 
 ### Setup OMV env and install OMV
     do(msg="Enter-file",
-        cmd='run_command("cd nas-kit/file")')
+        cmd='run_command("cd ~/nas-kit/file")') 
     do(msg="Nas-Source",
         cmd='run_command("sudo chmod 777 Source-code && sudo ./Source-code")')
     do(msg="Nas-deb-setup",
         cmd='run_command("sudo chmod 777 Nas-build && sudo ./Nas-build")')
     do(msg="install openmediavault",
-        cmd='run_command("sudo apt-get install openmediavault-keyring openmediavault -y")')
+        cmd='run_command("sudo apt-get install openmediavault-keyring openmediavault -y")') 
     do(msg="Populate the database",
         cmd='run_command("sudo omv-confdbadm populate")')
 
