@@ -223,7 +223,7 @@ item_4.python_cmd(item_4_cmd_1,item_4_cmd_2)
 # item_7 = Menu_item_templates(item_name = "item_7",choise_button_one = "NO",choice_button_two = "YES")
 # item_7.python_cmd("print('item_7_cmd1')","print('item_7_cmd2')") 
 
-
+###Menu_dict and length
 Menu_item_dict = {1:item_1.item_name, 2:item_2.item_name, 3:item_3.item_name, 4:item_4.item_name}
 Menu_item_len = len(Menu_item_dict)
 

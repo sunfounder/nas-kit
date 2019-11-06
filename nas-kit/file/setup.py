@@ -49,7 +49,7 @@ def install():
 
 ### install epd_code
     do(msg="install nas-kit",
-        cmd='run_command("sudo git clone https://github.com/sunfounder/nas-kit")')
+        cmd='run_command("cd ~ && sudo git clone https://github.com/sunfounder/nas-kit")')
 
 ### Setup OMV env and install OMV
     do(msg="Enter-file",
