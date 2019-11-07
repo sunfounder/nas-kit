@@ -96,7 +96,7 @@ class Page():
 
     def page_1_update(self):
         pi_msg = pi_read()
-        fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))
+        # fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))
         
         self.draw.text((80, 0), "BASIC INFO", font = font(18), fill = 255 - self.background_color)
         self.draw.line([(0,22),(250,22)], fill = 255 - self.background_color,width = 2)
@@ -127,7 +127,7 @@ class Page():
         
     def page_2_update(self):
         pi_msg = pi_read()
-        fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))
+        # fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))
         # self.draw.rectangle((0, 80, 250, 100), fill = self.background_color)
 
         self.draw.arc((8,73,16,81),180,360, fill = 255-self.background_color)
@@ -180,7 +180,7 @@ class Page():
         hard_disk_list = [] 
         hard_disk_list = portable_hard_disk_info() 
         pi_msg = pi_read()
-        fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))  
+        # fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))  
         
         self.draw.rectangle((0, 0, 250, 250), fill = self.background_color)
         self.draw.text((80, 0), "DISK INFO", font = font(18), fill = 255-self.background_color)

@@ -9,6 +9,7 @@ from PIL import Image,ImageDraw,ImageFont
 import traceback
 from utils import *
 from page import *
+import threading
 
 run_command("sudo resize2fs /dev/mmcblk0p2")
 #Menu_page_protect 
@@ -19,6 +20,7 @@ background_color_config = 255
 
 #page_mode and flag
 page_mode_val = 1
+page_quantity = 3
 
 #button_val
 current_page = 1
@@ -48,20 +50,22 @@ menu_image = Image.new('1', (epd.height, epd.width), 255)
 menu_draw = ImageDraw.Draw(menu_image)
 
 
+
+
 #KEY_IRQ_FUNC
 def KEY_ADD_FUNC(KEY_ADD):
-    global current_page,button_press_protect,menu_button_val,Menu_item_len,page_mode_val
+    global current_page,button_press_protect,menu_button_val,Menu_item_len,page_mode_val,page_quantity
 
     if button_press_protect == 1 and page_mode_val == 1:
         page.change_val(0)
-        if current_page < 3:
+        if current_page < page_quantity:
             current_page += 1
         else:
             current_page = 1
         
 
     if button_press_protect == 0:
-        if current_page < 3:
+        if current_page < page_quantity:
             current_page += 1
         else:
             current_page = 1
@@ -72,20 +76,20 @@ def KEY_ADD_FUNC(KEY_ADD):
     button_press_protect = 0
 
 def KEY_SUB_FUNC(KEY_SUB): 
-    global current_page,button_press_protect,menu_button_val,Menu_item_len,page_mode_val
+    global current_page,button_press_protect,menu_button_val,Menu_item_len,page_mode_val,page_quantity
     
     if button_press_protect == 1 and page_mode_val == 1:
         page.change_val(0)
         if current_page > 1:
             current_page -= 1
         else:
-            current_page = 3
+            current_page = page_quantity
 
     if button_press_protect == 0:
         if current_page > 1:
             current_page -= 1
         else:
-            current_page = 3
+            current_page = page_quantity
 
         if menu_button_val > 1:
             menu_button_val -= 1
@@ -94,7 +98,7 @@ def KEY_SUB_FUNC(KEY_SUB):
     button_press_protect = 0
 
 def KEY_BACK_FUNC(KEY_BACK):
-    global back_button_press_val,button_press_protect,page_mode_val
+    global back_button_press_val,button_press_protect,page_mode_val,page_quantity
     
     if button_press_protect == 1 and page_mode_val == 1 and Menu_page_protect_flag == 0:
         page.change_val(0)
@@ -105,7 +109,7 @@ def KEY_BACK_FUNC(KEY_BACK):
     # print(back_button_press_val)
 
 def KEY_OK_FUNC(KEY_OK): 
-    global last_page,button_press_protect,ok_button_press_val,page_mode_val
+    global last_page,button_press_protect,ok_button_press_val,page_mode_val,page_quantity
 
     if button_press_protect == 0: 
         ok_button_press_val = -1*ok_button_press_val  
@@ -278,31 +282,38 @@ def Menu_Page():
             back_button_press_val = 0 
             break
 
-###Main Service   
+###Main Service
 def main():
     global current_page,last_page,button_press_protect,background_color_config,page_mode_val
 
-    try:
-        while True:  
-            averg_temp = (float(cpu_temperature())+float(gpu_temperature()))/2.0 
-            fan_control(averg_temp)
-            page.background_color = background_color_config
-            if current_page != last_page:
-                button_press_protect = 1
-                last_page = current_page
-                page.mode = page_mode_val
-                page(current_page)
-            elif back_button_press_val == 2:
-                Menu_Page()
-                current_page = 1
-                last_page = -3
-                print("quit Menu")
+    while True:  
+        page.background_color = background_color_config
+        if current_page != last_page:
+            button_press_protect = 1
+            last_page = current_page
+            page.mode = page_mode_val
+            page(current_page)
+        elif back_button_press_val == 2:
+            Menu_Page()
+            current_page = 1
+            last_page = -3
+            # print("quit Menu")
 
-            button_press_protect = 0  
+        button_press_protect = 0  
         
+###main_thread
+def main_thread():
+    threads = []
+    t1 = threading.Thread(target=main)
+    threads.append(t1)
+    t2 = threading.Thread(target=pid_control)
+    threads.append(t2)
+    t1.start()
+    t2.start()
+
+if __name__ =='__main__':
+    try: 
+        main_thread() 
     except KeyboardInterrupt:      
         print("quit")    
         exit()
-
-if __name__ =='__main__': 
-    main() 

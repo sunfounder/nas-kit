@@ -9,6 +9,9 @@ LED_PWM = 26
 fan_pwn_freq = 100
 led_pwn_freq = 1
 
+FAN_MAX = 100
+FAN_MIN = 20
+
 GPIO.setwarnings(False) 
 GPIO.setmode(GPIO.BCM)
 output_list = [FAN_PWM,LED_PWM]
@@ -18,6 +21,47 @@ fan_pwm_pin = GPIO.PWM(FAN_PWM, fan_pwn_freq)
 led_pwm_pin = GPIO.PWM(LED_PWM, led_pwn_freq)
 fan_pwm_pin.start(0)
 led_pwm_pin.start(50)
+
+
+class PID():
+    def __init__(self, P=1, I=1, D=1, expect=0):
+        self.P = float(P)
+        self.I = float(I)
+        self.D = float(D)
+        self.expect = expect
+        self.error = 0
+        self.last_error = 0
+        self.error_sum = 0
+
+    @property
+    def pval(self):
+        return self.error
+
+    @property
+    def ival(self):
+        self.error_sum += self.error
+        return self.error_sum
+
+    @property
+    def dval(self):
+        return self.error - self.last_error
+
+    def run(self, value, mode="PID"):
+        self.last_error = self.error
+        self.error = value - self.expect
+        # print(self.error, self.last_error, self.pval, self.P)
+        result_p = self.P * self.pval
+        result_i = self.I * self.ival
+        result_d = self.D * self.dval
+        mode = mode.upper()
+        result = 0.0
+        if "P" in mode:
+            result += result_p
+        if "I" in mode:
+            result += result_i
+        if "D" in mode:
+            result += result_d
+        return result
 
 #run_command linux
 def run_command(cmd=""):
@@ -109,19 +153,19 @@ def pi_read():
     }
     return result 
 
-def fan_control(temp = 0):
-    if temp >=68:
-        fan_duty_cycle = round(float(temp-67)*30,1)
-        led_freq = int(temp-67)
-        if  fan_duty_cycle >= 100:
-            fan_duty_cycle = 100
+# def fan_control(temp = 0):
+#     if temp >=68:
+#         fan_duty_cycle = round(float(temp-67)*30,1)
+#         led_freq = int(temp-67)
+#         if  fan_duty_cycle >= 100:
+#             fan_duty_cycle = 100
         
-        fan_pwm_pin.ChangeDutyCycle(fan_duty_cycle)
-        led_pwm_pin.ChangeDutyCycle(100)  
+#         fan_pwm_pin.ChangeDutyCycle(fan_duty_cycle)
+#         led_pwm_pin.ChangeDutyCycle(100)  
         
-    else:
-        fan_pwm_pin.ChangeDutyCycle(0)
-        led_pwm_pin.ChangeDutyCycle(0) 
+#     else:
+#         fan_pwm_pin.ChangeDutyCycle(0)
+#         led_pwm_pin.ChangeDutyCycle(0) 
 
 def fan_power_read():
     average_temp = int((float(cpu_temperature())+float(gpu_temperature()))/2.0)
@@ -130,10 +174,10 @@ def fan_power_read():
     else:
         return 0
 
-def fan_led_stop():
-    fan_pwm_pin.ChangeDutyCycle(0)
-    led_pwm_pin.ChangeDutyCycle(0)  
-    GPIO.cleanup()
+# def fan_led_stop():
+#     fan_pwm_pin.ChangeDutyCycle(0)
+#     led_pwm_pin.ChangeDutyCycle(0)  
+#     GPIO.cleanup()
 
 def getIP(ifaces=['wlan0', 'eth0']):
     import re
@@ -149,5 +193,26 @@ def getIP(ifaces=['wlan0', 'eth0']):
             return ipv4
     return False
 
-if __name__ == '__main__':
-    print(portable_hard_disk_info())
+def pid_control():
+    pid = PID(
+        P = 0.5,
+        I = 1,
+        D = 1,
+        expect = 42,
+    )
+    dc = 100
+    i = 0
+    while True:
+        temp = (float(cpu_temperature())+float(gpu_temperature()))/2.0 
+        # print(temp)
+        dc += pid.run(temp, mode="PD")
+        dc = min(FAN_MAX, max(FAN_MIN, dc))
+        # log_temp(i, temp, dc)
+        # print(dc )
+        fan_pwm_pin.ChangeDutyCycle(dc)
+        led_pwm_pin.ChangeDutyCycle(dc)
+        i += 1
+        # time.sleep(1)
+
+# if __name__ == '__main__':
+#     print(portable_hard_disk_info())

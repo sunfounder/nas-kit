@@ -25,7 +25,7 @@ def do(msg="", cmd=""):
 
 def install():
 
-    ### Rpi lib    
+    ### Rpi_epd_lib    
     do(msg="wget BCM2835",
         cmd='run_command("wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz")')
     do(msg="tar and make install BCM2835",
