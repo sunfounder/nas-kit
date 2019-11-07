@@ -170,7 +170,7 @@ def pi_read():
 
 def fan_power_read():
     global fan_power
-    return fan_power
+    return round(fan_power,1)
 
 
 
@@ -194,7 +194,7 @@ def pid_control():
         P = 0.5,
         I = 1,
         D = 1,
-        expect = 42,
+        expect = 54,
     )
     dc = 100
     i = 0
