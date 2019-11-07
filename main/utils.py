@@ -11,6 +11,7 @@ led_pwn_freq = 1
 
 FAN_MAX = 100
 FAN_MIN = 20
+fan_power = 0
 
 GPIO.setwarnings(False) 
 GPIO.setmode(GPIO.BCM)
@@ -168,11 +169,11 @@ def pi_read():
 #         led_pwm_pin.ChangeDutyCycle(0) 
 
 def fan_power_read():
-    average_temp = int((float(cpu_temperature())+float(gpu_temperature()))/2.0)
-    if average_temp >= 68:
-        return round(float(average_temp-67)*30,1)
-    else:
-        return 0
+    global fan_power
+    # if fan_power >= 68:
+    #     return round(float(fan_power-67)*30,1)
+    # else:
+        return fan_power
 
 # def fan_led_stop():
 #     fan_pwm_pin.ChangeDutyCycle(0)
@@ -194,6 +195,7 @@ def getIP(ifaces=['wlan0', 'eth0']):
     return False
 
 def pid_control():
+    global fan_power
     pid = PID(
         P = 0.5,
         I = 1,
@@ -207,6 +209,7 @@ def pid_control():
         # print(temp)
         dc += pid.run(temp, mode="PD")
         dc = min(FAN_MAX, max(FAN_MIN, dc))
+        fan_power = dc
         # log_temp(i, temp, dc)
         # print(dc )
         fan_pwm_pin.ChangeDutyCycle(dc)
