@@ -170,15 +170,9 @@ def pi_read():
 
 def fan_power_read():
     global fan_power
-    # if fan_power >= 68:
-    #     return round(float(fan_power-67)*30,1)
-    # else:
-        return fan_power
+    return fan_power
 
-# def fan_led_stop():
-#     fan_pwm_pin.ChangeDutyCycle(0)
-#     led_pwm_pin.ChangeDutyCycle(0)  
-#     GPIO.cleanup()
+
 
 def getIP(ifaces=['wlan0', 'eth0']):
     import re
