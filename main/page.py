@@ -8,6 +8,7 @@ import traceback
 from utils import *
 
 
+
 fontdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'font')
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -69,7 +70,7 @@ class Page():
 
         eval("self.page_%s_setup()"%p)
         epd.displayPartial(epd.getbuffer(self.image))
-
+        self.page_change_flag = 1
         while self.page_change_flag:
             t = time.time()
             cmd = "self.page_%s_update()"%p

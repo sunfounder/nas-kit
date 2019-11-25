@@ -103,9 +103,14 @@ def KEY_BACK_FUNC(KEY_BACK):
     if button_press_protect == 1 and page_mode_val == 1 and Menu_page_protect_flag == 0:
         page.change_val(0)
         back_button_press_val += 1
+      #  print(back_button_press_val)
+    if back_button_press_val > 2:
+            back_button_press_val = 0
 
     if button_press_protect == 0:
         back_button_press_val += 1
+
+        # print(back_button_press_val)
     # print(back_button_press_val)
 
 def KEY_OK_FUNC(KEY_OK): 
@@ -289,11 +294,13 @@ def main():
     while True:  
         page.background_color = background_color_config
         if current_page != last_page:
+            # print("main_page")
             button_press_protect = 1
             last_page = current_page
             page.mode = page_mode_val
             page(current_page)
-        elif back_button_press_val == 2:
+        elif back_button_press_val >= 2:
+            # print("menu_page")
             Menu_Page()
             current_page = 1
             last_page = -3
