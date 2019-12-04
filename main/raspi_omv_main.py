@@ -65,6 +65,7 @@ def KEY_ADD_FUNC(KEY_ADD):
         
 
     if button_press_protect == 0:
+        page.change_val(0)
         if current_page < page_quantity:
             current_page += 1
         else:
@@ -73,7 +74,10 @@ def KEY_ADD_FUNC(KEY_ADD):
             menu_button_val += 1
         else: 
             menu_button_val = 1
+    print(current_page)
+    print(button_press_protect)
     button_press_protect = 0
+
 
 def KEY_SUB_FUNC(KEY_SUB): 
     global current_page,button_press_protect,menu_button_val,Menu_item_len,page_mode_val,page_quantity
@@ -86,6 +90,7 @@ def KEY_SUB_FUNC(KEY_SUB):
             current_page = page_quantity
 
     if button_press_protect == 0:
+        page.change_val(0)
         if current_page > 1:
             current_page -= 1
         else:
@@ -96,6 +101,8 @@ def KEY_SUB_FUNC(KEY_SUB):
         else:
             menu_button_val = Menu_item_len
     button_press_protect = 0
+    print(current_page)
+    print(button_press_protect)
 
 def KEY_BACK_FUNC(KEY_BACK):
     global back_button_press_val,button_press_protect,page_mode_val,page_quantity
@@ -104,14 +111,16 @@ def KEY_BACK_FUNC(KEY_BACK):
         page.change_val(0)
         back_button_press_val += 1
       #  print(back_button_press_val)
-    if back_button_press_val > 2:
-            back_button_press_val = 0
+    if back_button_press_val >= 2:
+        # page.change_val(0)
+        back_button_press_val = 0
 
     if button_press_protect == 0:
+        # page.change_val(0)
         back_button_press_val += 1
 
-        # print(back_button_press_val)
-    # print(back_button_press_val)
+    print(button_press_protect)
+    print(back_button_press_val)
 
 def KEY_OK_FUNC(KEY_OK): 
     global last_page,button_press_protect,ok_button_press_val,page_mode_val,page_quantity
@@ -174,14 +183,15 @@ class Menu_item_templates():
             epd.displayPartial(epd.getbuffer(menu_image))
 
             if ok_button_press_val == 1:
-                menu_draw.rectangle((0, 90, 250, 120), fill = 255)
-                epd.displayPartial(epd.getbuffer(menu_image)) 
+
                 if self.choice_button_flag == -1:
                     self.run_python_cmd(self.python_cmd_2)
                     self.run_linux_cmd(self.linux_cmd_2)
                 else:
                     self.run_python_cmd(self.python_cmd_1)
                     self.run_linux_cmd(self.linux_cmd_1)
+                menu_draw.rectangle((0, 90, 250, 120), fill = 255)
+                epd.displayPartial(epd.getbuffer(menu_image)) 
                 back_button_press_val = 0
                 break
 

@@ -62,7 +62,7 @@ class Page():
         
         self.image = Image.new('1', (epd.height, epd.width), self.background_color)
         self.draw = ImageDraw.Draw(self.image)
-        
+        self.clear()
         self.reset()
 
         eval("self.page_%s_setup()"%p)
@@ -187,8 +187,8 @@ class Page():
         self.draw.rectangle((0, 26, 250, 250), fill = self.background_color)
         self.draw.text((80, 0), "DISK INFO", font = font(18), fill = 255-self.background_color)
         self.draw.line([(0,25),(250,25)], fill = 255-self.background_color,width = 2)
-        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(14), fill = 255-self.background_color)
-        self.draw.text((112, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(14), fill = 255-self.background_color)
+        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(12), fill = 255-self.background_color)
+        self.draw.text((112, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(12), fill = 255-self.background_color)
         self.draw.rectangle((2, 43, 234, 53), outline = 255-self.background_color)
         self.draw.rectangle((3, 43, 234 * float(pi_msg['disk'][3].replace('%', ''))/100, 53), fill = 255-self.background_color)
         if len(hard_disk_list) != 0 and len(hard_disk_list) < 3:
@@ -199,7 +199,7 @@ class Page():
 
                 total = p(used + free)
                 used = p(used)
-                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(14), fill = 255-self.background_color)
+                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(12), fill = 255-self.background_color)
                 self.draw.rectangle((2, 72 + i*29, 234, 82 + i*29), outline = 255-self.background_color)
                 self.draw.rectangle((3, 72 + i*29, 234 * float(hard_disk_list[i][4].replace('%', ''))/100, 82 + i*29), fill = 255-self.background_color)
 
@@ -229,7 +229,7 @@ class Page():
             
             epd.displayPartial(epd.getbuffer(self.image))
         self.reset()
-        epd.clear(0xff)
+        epd.Clear(0xff)
         time.sleep(1)
         epd.sleep()
         time.sleep(0.5)
