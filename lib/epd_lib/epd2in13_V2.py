@@ -1,37 +1,8 @@
-# *****************************************************************************
-# * | File        :	  epd2in13_V2.py
-# * | Author      :   Waveshare team
-# * | Function    :   Electronic paper driver
-# * | Info        :
-# *----------------
-# * | This version:   V4.0
-# * | Date        :   2019-06-20
-# # | Info        :   python demo
-# -----------------------------------------------------------------------------
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documnetation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to  whom the Software is
-# furished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-
-
 import logging
-from . import epdconfig  
+from . import epdconfig
+# import epdconfig
 import numpy as np
-
+import time
 # Display resolution
 EPD_WIDTH       = 122
 EPD_HEIGHT      = 250
@@ -48,65 +19,89 @@ class EPD:
     FULL_UPDATE = 0
     PART_UPDATE = 1
     lut_full_update= [
-        0x80,0x60,0x40,0x00,0x00,0x00,0x00,             #LUT0: BB:     VS 0 ~7
-        0x10,0x60,0x20,0x00,0x00,0x00,0x00,             #LUT1: BW:     VS 0 ~7
-        0x80,0x60,0x40,0x00,0x00,0x00,0x00,             #LUT2: WB:     VS 0 ~7
-        0x10,0x60,0x20,0x00,0x00,0x00,0x00,             #LUT3: WW:     VS 0 ~7
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT4: VCOM:   VS 0 ~7
+        0x40,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x80,	0x00,	0x00,	0x00,	0x00,	0x00,0x00,	0x00,	0x00,	0x00,	
+0x40,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x80,	0x00, 0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00, 0x00,	0x00,	
+	
+0x0A,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00, 0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00, 0x00,	0x00,	0x00,	0x00,		
+										
+0x15,	0x41,	0xA8,	0x32,	0x50,	0x2C, 0x0B,	
 
-        0x03,0x03,0x00,0x00,0x02,                       # TP0 A~D RP0
-        0x09,0x09,0x00,0x00,0x02,                       # TP1 A~D RP1
-        0x03,0x03,0x00,0x00,0x02,                       # TP2 A~D RP2
-        0x00,0x00,0x00,0x00,0x00,                       # TP3 A~D RP3
-        0x00,0x00,0x00,0x00,0x00,                       # TP4 A~D RP4
-        0x00,0x00,0x00,0x00,0x00,                       # TP5 A~D RP5
-        0x00,0x00,0x00,0x00,0x00,                       # TP6 A~D RP6
+        # 0x80,0x60,0x40,0x00,0x00,0x00,0x00,             #LUT0: BB:     VS 0 ~7
+        # 0x10,0x60,0x20,0x00,0x00,0x00,0x00,             #LUT1: BW:     VS 0 ~7
+        # 0x80,0x60,0x40,0x00,0x00,0x00,0x00,             #LUT2: WB:     VS 0 ~7
+        # 0x10,0x60,0x20,0x00,0x00,0x00,0x00,             #LUT3: WW:     VS 0 ~7
+        # 0x00,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT4: VCOM:   VS 0 ~7
 
-        0x15,0x41,0xA8,0x32,0x30,0x0A,
+        # 0x03,0x03,0x00,0x00,0x02,                       # TP0 A~D RP0
+        # 0x09,0x09,0x00,0x00,0x02,                       # TP1 A~D RP1
+        # 0x03,0x03,0x00,0x00,0x02,                       # TP2 A~D RP2
+        # 0x00,0x00,0x00,0x00,0x00,                       # TP3 A~D RP3
+        # 0x00,0x00,0x00,0x00,0x00,                       # TP4 A~D RP4
+        # 0x00,0x00,0x00,0x00,0x00,                       # TP5 A~D RP5
+        # 0x00,0x00,0x00,0x00,0x00,                       # TP6 A~D RP6
+
+        # 0x15,0x41,0xA8,0x32,0x30,0x0A,
     ]
 
     lut_partial_update = [ #20 bytes
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT0: BB:     VS 0 ~7
-        0x80,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT1: BW:     VS 0 ~7
-        0x40,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT2: WB:     VS 0 ~7
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT3: WW:     VS 0 ~7
-        0x00,0x00,0x00,0x00,0x00,0x00,0x00,             #LUT4: VCOM:   VS 0 ~7
-
-        0x0A,0x00,0x00,0x00,0x00,                       # TP0 A~D RP0
-        0x00,0x00,0x00,0x00,0x00,                       # TP1 A~D RP1
-        0x00,0x00,0x00,0x00,0x00,                       # TP2 A~D RP2
-        0x00,0x00,0x00,0x00,0x00,                       # TP3 A~D RP3
-        0x00,0x00,0x00,0x00,0x00,                       # TP4 A~D RP4
-        0x00,0x00,0x00,0x00,0x00,                       # TP5 A~D RP5
-        0x00,0x00,0x00,0x00,0x00,                       # TP6 A~D RP6
-
-        0x15,0x41,0xA8,0x32,0x30,0x0A,
+0x40,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x80,	0x00,	0x00,	0x00,	0x00,	0x00,0x00,	0x00,	0x00,	0x00,	
+0x40,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x80,	0x00, 0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00,	0x00, 0x00,	0x00,	
+	
+0x0A,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00, 0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00,	0x00,	0x00,	0x00,	0x00,	
+0x00, 0x00,	0x00,	0x00,	0x00,		
+										
+0x15,	0x41,	0xA8,	0x32,	0x50,	0x2C, 0x0B,
     ]
         
     # Hardware reset
     def reset(self):
-        epdconfig.digital_write(self.reset_pin, 1)
-        epdconfig.delay_ms(200) 
         epdconfig.digital_write(self.reset_pin, 0)
-        epdconfig.delay_ms(10)
+        epdconfig.delay_ms(100)
         epdconfig.digital_write(self.reset_pin, 1)
-        epdconfig.delay_ms(200)   
+        epdconfig.delay_ms(100)  
 
     def send_command(self, command):
-        epdconfig.digital_write(self.dc_pin, 0)
+        epdconfig.digital_write(self.cs_pin, 1)
         epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, 0)
         epdconfig.spi_writebyte([command])
         epdconfig.digital_write(self.cs_pin, 1)
 
     def send_data(self, data):
-        epdconfig.digital_write(self.dc_pin, 1)
+        
+        epdconfig.digital_write(self.cs_pin, 1)
         epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, 1)
         epdconfig.spi_writebyte([data])
         epdconfig.digital_write(self.cs_pin, 1)
         
     def ReadBusy(self):
         while(epdconfig.digital_read(self.busy_pin) == 1):      # 0: idle, 1: busy
-            epdconfig.delay_ms(100)    
+            pass
+            # epdconfig.delay_ms(100)    
 
     def TurnOnDisplay(self):
         self.send_command(0x22)
@@ -157,23 +152,23 @@ class EPD:
             self.send_data(0x03)
 
             self.send_command(0x2C)     #VCOM Voltage
-            self.send_data(0x55)    #
+            self.send_data(0x50)    #
 
             self.send_command(0x03)
-            self.send_data(self.lut_full_update[70])
+            self.send_data(self.lut_full_update[100])
 
             self.send_command(0x04) #
-            self.send_data(self.lut_full_update[71])
-            self.send_data(self.lut_full_update[72])
-            self.send_data(self.lut_full_update[73])
+            self.send_data(self.lut_full_update[101])
+            self.send_data(self.lut_full_update[102])
+            self.send_data(self.lut_full_update[103])
 
             self.send_command(0x3A)     #Dummy Line
-            self.send_data(self.lut_full_update[74])
+            self.send_data(self.lut_full_update[105])
             self.send_command(0x3B)     #Gate time
-            self.send_data(self.lut_full_update[75])
+            self.send_data(self.lut_full_update[106])
 
             self.send_command(0x32)
-            for count in range(70):
+            for count in range(100):
                 self.send_data(self.lut_full_update[count])
 
             self.send_command(0x4E)   # set RAM x address count to 0
@@ -183,13 +178,14 @@ class EPD:
             self.send_data(0x00)
             self.ReadBusy()
         else:
-            self.send_command(0x2C)     #VCOM Voltage
-            self.send_data(0x26)
+
+            # self.send_command(0x2C)     #VCOM Voltage
+            # self.send_data(0x26)
 
             self.ReadBusy()
 
             self.send_command(0x32)
-            for count in range(70):
+            for count in range(100):
                 self.send_data(self.lut_partial_update[count])
 
             self.send_command(0x37)
@@ -197,17 +193,18 @@ class EPD:
             self.send_data(0x00)
             self.send_data(0x00)
             self.send_data(0x00)
+            self.send_data(0x00)
             self.send_data(0x40)
             self.send_data(0x00)
-            self.send_data(0x00)
+            
 
             self.send_command(0x22)
             self.send_data(0xC0)
             self.send_command(0x20)
             self.ReadBusy()
 
-            self.send_command(0x3C) #BorderWavefrom
-            self.send_data(0x01)
+            # self.send_command(0x3C) #BorderWavefrom
+            # self.send_data(0x01)
         return 0
 
     def getbuffer(self, image):
@@ -302,9 +299,9 @@ class EPD:
         self.TurnOnDisplay()
 
     def sleep(self):
-        self.send_command(0x22) #POWER OFF
-        self.send_data(0xC3)
-        self.send_command(0x20)
+        # self.send_command(0x22) #POWER OFF
+        # self.send_data(0xC3)
+        # self.send_command(0x20)
 
         self.send_command(0x10) #enter deep sleep
         self.send_data(0x01)
@@ -314,3 +311,17 @@ class EPD:
 
 ### END OF FILE ###
 
+if __name__ == '__main__':
+    epd_t = EPD()
+    epd_t.init(epd_t.PART_UPDATE)
+    a = 0xff
+    for i in range(0,9):
+        print(i)
+        if i % 2 == 0:
+            a = 0x0
+        else:
+            a = 0xff
+        epd_t.displayPartial(a)
+        time.sleep(0.5)
+         
+    print("end")

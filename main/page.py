@@ -49,12 +49,9 @@ class Page():
         # epd.init(epd.PART_UPDATE)
 
     def reset(self):
-        # epd.init(epd.FULL_UPDATE)
-        # epd.Clear(self.background_color)
-        # epd.Clear(self.background_color)
         self.clear()
         epd.init(epd.FULL_UPDATE)
-        epd.displayPartBaseImage([self.background_color]*epd.width*epd.height)
+        epd.display([self.background_color]*epd.width*epd.height)
         epd.init(epd.PART_UPDATE)
     
     def update(self):
@@ -71,20 +68,23 @@ class Page():
         eval("self.page_%s_setup()"%p)
         epd.displayPartial(epd.getbuffer(self.image))
         self.page_change_flag = 1
+
         while self.page_change_flag:
             t = time.time()
             cmd = "self.page_%s_update()"%p
             # print(cmd)
             eval(cmd)
-            if self.clear_count > self.clear_max:
-                self.reset()
+            # if self.clear_count > self.clear_max:
+            #     print("begin")
+            #     self.reset()
             self.update()
 
             self.refresh_num += 1
             self.clear_count += 1
             if self.refresh_num == 5 and self.mode == 0:
-                self.draw.ellipse((2,2,19,19),outline = 255-self.background_color)
-                self.draw.text((6, 1), 'S', font = font(16), fill = 255-self.background_color)
+                
+                self.draw.ellipse((2,2,19,19),fill = 255-self.background_color)
+                self.draw.text((6, 1), 'S', font = font(16), fill = self.background_color)
                 self.update()
                 break
             while self.page_change_flag and time.time()-t < self.timer: 
@@ -102,18 +102,18 @@ class Page():
         self.draw.text((80, 0), "BASIC INFO", font = font(18), fill = 255 - self.background_color)
         self.draw.line([(0,22),(250,22)], fill = 255 - self.background_color,width = 2)
         
-        self.draw.rectangle((0, 23, int(12.5*len(str(getIP()))), 47), fill = 255-self.background_color)
+        self.draw.rectangle((0, 24, int(12.5*len(str(getIP()))), 47), fill = 255-self.background_color)
         self.draw.text((0, 26), 'IP: ' + str(getIP()), font = font(16), fill = self.background_color)       
         
         self.draw.rectangle((37, 53, 105, 73), fill = self.background_color)
-        self.draw.text((0, 53), 'CPU: ' + pi_msg['cpu_usage'] + '%', font = font(15), fill = 255-self.background_color)
+        self.draw.text((0, 53), 'CPU: ' + pi_msg['cpu_usage'] + ' %', font = font(15), fill = 255-self.background_color)
         self.draw.rectangle((0, 75, 234, 85), outline = 255-self.background_color)
         self.draw.rectangle((0, 75, 234 * float(pi_msg['cpu_usage'])/100, 85), fill = 255-self.background_color)
 
         Ram_usage = round(pi_msg['ram'][1] / pi_msg['ram'][0],2)
         self.draw.rectangle((37, 88, 105, 108), fill = self.background_color)
         self.draw.rectangle((175, 88, 235, 108), fill = self.background_color)
-        self.draw.text((0, 88), 'RAM: ' + str(Ram_usage) + '%', font = font(15), fill = 255-self.background_color)
+        self.draw.text((0, 88), 'RAM: ' + str(Ram_usage) + ' %', font = font(15), fill = 255-self.background_color)
         self.draw.text((120, 88), 'total: ' + str(pi_msg['ram'][0]) + 'M', font = font(15), fill = 255-self.background_color)
         self.draw.rectangle((0, 110, 234, 120), outline = 255-self.background_color)
         self.draw.rectangle((0, 110, 234 * Ram_usage/100, 120), fill = 255-self.background_color) 
@@ -154,16 +154,17 @@ class Page():
         self.draw.ellipse((182,86,190,94),fill = 255-self.background_color)
         self.draw.ellipse((184,88,188,92),fill = self.background_color)
         
-        self.draw.rectangle((23, 80, 60, 96), fill = self.background_color)
-        self.draw.rectangle((110, 80, 150, 100), fill = self.background_color)
-        self.draw.rectangle((209, 80, 250, 100), fill = self.background_color)
+        self.draw.rectangle((23, 75, 65, 96), fill = self.background_color)
+        self.draw.rectangle((110, 75, 150, 100), fill = self.background_color)
+        self.draw.rectangle((209, 75, 250, 100), fill = self.background_color)
 
-        self.draw.text((24, 80), pi_msg['cpu_temperature'] + 'C', font = font(14), fill = 255-self.background_color)
-        self.draw.text((111, 80), pi_msg['gpu_temperature'] + 'C', font = font(14), fill = 255-self.background_color)
-        self.draw.text((210, 80), str(fan_power_read()) + '%', font = font(14), fill = 255-self.background_color)
+        self.draw.text((24, 75), pi_msg['cpu_temperature'] + 'C', font = font(15), fill = 255-self.background_color)
+        self.draw.text((111, 75), pi_msg['gpu_temperature'] + 'C', font = font(15), fill = 255-self.background_color)
+        self.draw.text((210, 75), str(fan_power_read()) + ' %', font = font(15), fill = 255-self.background_color)
 
     def page_3_setup(self):
         pass
+        # self.draw.text((80, 0), "DISK INFO", font = font(20), fill = 255-self.background_color)
     
     def page_3_update(self):
         
@@ -183,11 +184,11 @@ class Page():
         pi_msg = pi_read()
         # fan_control(int((float(cpu_temperature())+float(gpu_temperature()))/2.0))  
         
-        self.draw.rectangle((0, 0, 250, 250), fill = self.background_color)
+        self.draw.rectangle((0, 26, 250, 250), fill = self.background_color)
         self.draw.text((80, 0), "DISK INFO", font = font(18), fill = 255-self.background_color)
         self.draw.line([(0,25),(250,25)], fill = 255-self.background_color,width = 2)
-        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(12), fill = 255-self.background_color)
-        self.draw.text((112, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(12), fill = 255-self.background_color)
+        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(14), fill = 255-self.background_color)
+        self.draw.text((112, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(14), fill = 255-self.background_color)
         self.draw.rectangle((2, 43, 234, 53), outline = 255-self.background_color)
         self.draw.rectangle((3, 43, 234 * float(pi_msg['disk'][3].replace('%', ''))/100, 53), fill = 255-self.background_color)
         if len(hard_disk_list) != 0 and len(hard_disk_list) < 3:
@@ -198,7 +199,7 @@ class Page():
 
                 total = p(used + free)
                 used = p(used)
-                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(12), fill = 255-self.background_color)
+                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(14), fill = 255-self.background_color)
                 self.draw.rectangle((2, 72 + i*29, 234, 82 + i*29), outline = 255-self.background_color)
                 self.draw.rectangle((3, 72 + i*29, 234 * float(hard_disk_list[i][4].replace('%', ''))/100, 82 + i*29), fill = 255-self.background_color)
 
@@ -208,11 +209,12 @@ class Page():
         
         self.reset()
         
-        self.draw.rectangle((0, 0, 250, 250), fill = 255) 
-        epd.displayPartial(epd.getbuffer(self.image))
+        # self.draw.rectangle((0, 0, 250, 250), fill = 255) 
+        # epd.displayPartial(epd.getbuffer(self.image))
         
         for i in range(4):
             wod = i*76
+            self.draw.rectangle((0, 0, 250, 250), fill = 255)
             self.draw.rectangle((wod, 25, 135+wod, 95), outline = 0) 
             self.draw.polygon([(135+wod,25),(135+wod,95),(175+wod,60)],fill = 0)
 
@@ -224,8 +226,13 @@ class Page():
             epd.displayPartial(epd.getbuffer(self.image))
             time.sleep(0.8)
 
-            self.draw.rectangle((0, 0, 250, 250), fill = 255)
+            
             epd.displayPartial(epd.getbuffer(self.image))
+        self.reset()
+        epd.clear(0xff)
+        time.sleep(1)
+        epd.sleep()
+        time.sleep(0.5)
 
     def change_val(self, x = 0):
         # global page_change_flag
