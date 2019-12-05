@@ -106,15 +106,15 @@ class Page():
         self.draw.text((0, 26), 'IP: ' + str(getIP()), font = font(16), fill = self.background_color)       
         
         self.draw.rectangle((37, 53, 105, 73), fill = self.background_color)
-        self.draw.text((0, 53), 'CPU: ' + pi_msg['cpu_usage'] + ' %', font = font(15), fill = 255-self.background_color)
+        self.draw.text((0, 53), 'CPU: ' + pi_msg['cpu_usage'] + '%', font = font(16), fill = 255-self.background_color)
         self.draw.rectangle((0, 75, 234, 85), outline = 255-self.background_color)
         self.draw.rectangle((0, 75, 234 * float(pi_msg['cpu_usage'])/100, 85), fill = 255-self.background_color)
 
         Ram_usage = round(pi_msg['ram'][1] / pi_msg['ram'][0],2)
         self.draw.rectangle((37, 88, 105, 108), fill = self.background_color)
         self.draw.rectangle((175, 88, 235, 108), fill = self.background_color)
-        self.draw.text((0, 88), 'RAM: ' + str(Ram_usage) + ' %', font = font(15), fill = 255-self.background_color)
-        self.draw.text((120, 88), 'total: ' + str(pi_msg['ram'][0]) + 'M', font = font(15), fill = 255-self.background_color)
+        self.draw.text((0, 88), 'RAM: ' + str(Ram_usage) + '%', font = font(16), fill = 255-self.background_color)
+        self.draw.text((120, 88), 'total: ' + str(pi_msg['ram'][0]) + 'M', font = font(16), fill = 255-self.background_color)
         self.draw.rectangle((0, 110, 234, 120), outline = 255-self.background_color)
         self.draw.rectangle((0, 110, 234 * Ram_usage/100, 120), fill = 255-self.background_color) 
     
@@ -156,11 +156,11 @@ class Page():
         
         self.draw.rectangle((23, 75, 65, 96), fill = self.background_color)
         self.draw.rectangle((110, 75, 150, 100), fill = self.background_color)
-        self.draw.rectangle((209, 75, 250, 100), fill = self.background_color)
+        self.draw.rectangle((206, 75, 250, 100), fill = self.background_color)
 
         self.draw.text((24, 75), pi_msg['cpu_temperature'] + 'C', font = font(15), fill = 255-self.background_color)
         self.draw.text((111, 75), pi_msg['gpu_temperature'] + 'C', font = font(15), fill = 255-self.background_color)
-        self.draw.text((210, 75), str(fan_power_read()) + ' %', font = font(15), fill = 255-self.background_color)
+        self.draw.text((207, 75), str(fan_power_read()) + '%', font = font(15), fill = 255-self.background_color)
 
     def page_3_setup(self):
         pass
@@ -187,19 +187,19 @@ class Page():
         self.draw.rectangle((0, 26, 250, 250), fill = self.background_color)
         self.draw.text((80, 0), "DISK INFO", font = font(18), fill = 255-self.background_color)
         self.draw.line([(0,25),(250,25)], fill = 255-self.background_color,width = 2)
-        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(12), fill = 255-self.background_color)
-        self.draw.text((112, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(12), fill = 255-self.background_color)
+        self.draw.text((6, 26), 'root: ' + pi_msg['disk'][3], font = font(14), fill = 255-self.background_color)
+        self.draw.text((102, 26), 'Size: %s / %s' % (pi_msg['disk'][1],pi_msg['disk'][0]), font = font(14), fill = 255-self.background_color)
         self.draw.rectangle((2, 43, 234, 53), outline = 255-self.background_color)
         self.draw.rectangle((3, 43, 234 * float(pi_msg['disk'][3].replace('%', ''))/100, 53), fill = 255-self.background_color)
         if len(hard_disk_list) != 0 and len(hard_disk_list) < 3:
             for i in range(len(hard_disk_list)):
-                self.draw.text((6, 55 + i*29), hard_disk_list[i][0][-4:].upper() +': ' + hard_disk_list[i][4], font = font(12), fill = 255-self.background_color)
+                self.draw.text((6, 55 + i*29), hard_disk_list[i][0][-4:].upper() +': ' + hard_disk_list[i][4], font = font(14), fill = 255-self.background_color)
                 used = eval(hard_disk_list[i][2].replace('K', '').replace('M', '*1000').replace('G', '*1000000').replace('T', '*1000000000'))
                 free = eval(hard_disk_list[i][3].replace('K', '').replace('M', '*1000').replace('G', '*1000000').replace('T', '*1000000000'))
 
                 total = p(used + free)
                 used = p(used)
-                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(12), fill = 255-self.background_color)
+                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(14), fill = 255-self.background_color)
                 self.draw.rectangle((2, 72 + i*29, 234, 82 + i*29), outline = 255-self.background_color)
                 self.draw.rectangle((3, 72 + i*29, 234 * float(hard_disk_list[i][4].replace('%', ''))/100, 82 + i*29), fill = 255-self.background_color)
 
@@ -221,18 +221,20 @@ class Page():
             self.draw.polygon([(wod,25),(wod,45+i*5),(wod-15-i*10,36-i*12)],fill = 0)
             self.draw.polygon([(wod,48-i*4),(wod,71+i*4),(wod-20-i*20,60)],fill = 0)
             self.draw.polygon([(wod,71-i*5),(wod,95),(wod-15-i*10,83+i*12)],fill = 0)
-            self.draw.text((10+wod, 35), 'Goodbye ! Sir', font = font(17), fill = 0)
-            self.draw.text((10+wod, 65), 'Sunfounder', font = font(17), fill = 0)
+            self.draw.text((5+wod, 35), 'Goodbye ! Sir', font = font(18), fill = 0)
+            self.draw.text((5+wod, 65), 'Sunfounder', font = font(18), fill = 0)
             epd.displayPartial(epd.getbuffer(self.image))
             time.sleep(0.8)
 
             
-            epd.displayPartial(epd.getbuffer(self.image))
-        self.reset()
-        epd.Clear(0xff)
-        time.sleep(1)
-        epd.sleep()
-        time.sleep(0.5)
+            # epd.displayPartial(epd.getbuffer(self.image))
+        # self.reset()
+        # epd.Clear(0xff)
+        # epd.init(epd.FULL_UPDATE)
+        # epd.display([self.background_color]*epd.width*epd.height)
+        # time.sleep(1)
+        # epd.sleep()
+        # time.sleep(0.5)
 
     def change_val(self, x = 0):
         # global page_change_flag

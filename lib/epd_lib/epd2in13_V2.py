@@ -311,17 +311,17 @@ class EPD:
 
 ### END OF FILE ###
 
-if __name__ == '__main__':
-    epd_t = EPD()
-    epd_t.init(epd_t.PART_UPDATE)
-    a = 0xff
-    for i in range(0,9):
-        print(i)
-        if i % 2 == 0:
-            a = 0x0
-        else:
-            a = 0xff
-        epd_t.displayPartial(a)
-        time.sleep(0.5)
+# if __name__ == '__main__':
+#     epd_t = EPD()
+#     epd_t.init(epd_t.PART_UPDATE)
+#     a = 0xff
+#     for i in range(0,9):
+#         print(i)
+#         if i % 2 == 0:
+#             a = 0x0
+#         else:
+#             a = 0xff
+#         epd_t.displayPartial(a)
+#         time.sleep(0.5)
          
-    print("end")
+#     print("end")

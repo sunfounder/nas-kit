@@ -13,7 +13,7 @@ import threading
 
 run_command("sudo resize2fs /dev/mmcblk0p2")
 #Menu_page_protect 
-Menu_page_protect_flag = 0 
+# Menu_page_protect_flag = 0 
 
 #background_color
 background_color_config = 255
@@ -74,8 +74,8 @@ def KEY_ADD_FUNC(KEY_ADD):
             menu_button_val += 1
         else: 
             menu_button_val = 1
-    print(current_page)
-    print(button_press_protect)
+    # print(current_page)
+    # print(button_press_protect)
     button_press_protect = 0
 
 
@@ -101,26 +101,27 @@ def KEY_SUB_FUNC(KEY_SUB):
         else:
             menu_button_val = Menu_item_len
     button_press_protect = 0
-    print(current_page)
-    print(button_press_protect)
+    # print(current_page)
+    # print(button_press_protect)
 
 def KEY_BACK_FUNC(KEY_BACK):
     global back_button_press_val,button_press_protect,page_mode_val,page_quantity
     
-    if button_press_protect == 1 and page_mode_val == 1 and Menu_page_protect_flag == 0:
+    # if button_press_protect == 1 and page_mode_val == 1:
+    if page_mode_val == 1:
         page.change_val(0)
         back_button_press_val += 1
       #  print(back_button_press_val)
-    if back_button_press_val >= 2:
-        # page.change_val(0)
+    if back_button_press_val > 2:
+        page.change_val(0)
         back_button_press_val = 0
 
     if button_press_protect == 0:
         # page.change_val(0)
         back_button_press_val += 1
 
-    print(button_press_protect)
-    print(back_button_press_val)
+    # print("button_press_protect: ",button_press_protect)
+    # print("back_button_press_val: ",back_button_press_val)
 
 def KEY_OK_FUNC(KEY_OK): 
     global last_page,button_press_protect,ok_button_press_val,page_mode_val,page_quantity
