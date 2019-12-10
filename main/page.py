@@ -199,7 +199,7 @@ class Page():
 
                 total = p(used + free)
                 used = p(used)
-                self.draw.text((112, 55 + i*29), "Size: %s / %s"%(used, total), font = font(14), fill = 255-self.background_color)
+                self.draw.text((102, 55 + i*29), "Size: %s / %s"%(used, total), font = font(14), fill = 255-self.background_color)
                 self.draw.rectangle((2, 72 + i*29, 234, 82 + i*29), outline = 255-self.background_color)
                 self.draw.rectangle((3, 72 + i*29, 234 * float(hard_disk_list[i][4].replace('%', ''))/100, 82 + i*29), fill = 255-self.background_color)
 
@@ -212,7 +212,7 @@ class Page():
         # self.draw.rectangle((0, 0, 250, 250), fill = 255) 
         # epd.displayPartial(epd.getbuffer(self.image))
         
-        for i in range(4):
+        for i in range(5):
             wod = i*76
             self.draw.rectangle((0, 0, 250, 250), fill = 255)
             self.draw.rectangle((wod, 25, 135+wod, 95), outline = 0) 
@@ -225,10 +225,13 @@ class Page():
             self.draw.text((5+wod, 65), 'Sunfounder', font = font(18), fill = 0)
             epd.displayPartial(epd.getbuffer(self.image))
             time.sleep(0.8)
-
-            
+        
+        self.reset()
+        self.draw.rectangle((0, 0, 250, 250), fill = 255)
+        epd.displayPartial(epd.getbuffer(self.image))
+        time.sleep(0.5)   
             # epd.displayPartial(epd.getbuffer(self.image))
-        # self.reset()
+        
         # epd.Clear(0xff)
         # epd.init(epd.FULL_UPDATE)
         # epd.display([self.background_color]*epd.width*epd.height)
