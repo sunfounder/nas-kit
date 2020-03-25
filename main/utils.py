@@ -194,7 +194,7 @@ def pid_control():
         P = 0.5,
         I = 1,
         D = 1,
-        expect = 54,
+        expect = 47,
     )
     dc = 100
     i = 0
