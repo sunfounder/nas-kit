@@ -212,7 +212,7 @@ class Page():
         # self.draw.rectangle((0, 0, 250, 250), fill = 255) 
         # epd.displayPartial(epd.getbuffer(self.image))
         
-        for i in range(5):
+        for i in range(6):
             wod = i*76
             self.draw.rectangle((0, 0, 250, 250), fill = 255)
             self.draw.rectangle((wod, 25, 135+wod, 95), outline = 0) 
@@ -221,23 +221,17 @@ class Page():
             self.draw.polygon([(wod,25),(wod,45+i*5),(wod-15-i*10,36-i*12)],fill = 0)
             self.draw.polygon([(wod,48-i*4),(wod,71+i*4),(wod-20-i*20,60)],fill = 0)
             self.draw.polygon([(wod,71-i*5),(wod,95),(wod-15-i*10,83+i*12)],fill = 0)
-            self.draw.text((5+wod, 35), 'Goodbye ! Sir', font = font(18), fill = 0)
+            self.draw.text((5+wod, 35), 'Goodbye! Sir', font = font(18), fill = 0)
             self.draw.text((5+wod, 65), 'Sunfounder', font = font(18), fill = 0)
             epd.displayPartial(epd.getbuffer(self.image))
-            time.sleep(0.8)
+            time.sleep(0.5)
         
-        self.reset()
         self.draw.rectangle((0, 0, 250, 250), fill = 255)
-        epd.displayPartial(epd.getbuffer(self.image))
-        time.sleep(0.5)   
-            # epd.displayPartial(epd.getbuffer(self.image))
-        
-        # epd.Clear(0xff)
-        # epd.init(epd.FULL_UPDATE)
-        # epd.display([self.background_color]*epd.width*epd.height)
-        # time.sleep(1)
-        # epd.sleep()
-        # time.sleep(0.5)
+        epd.init(epd.FULL_UPDATE)
+        epd.display(epd.getbuffer(self.image))
+        epd.sleep()
+
+
 
     def change_val(self, x = 0):
         # global page_change_flag

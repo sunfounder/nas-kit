@@ -19,7 +19,7 @@ run_command("sudo resize2fs /dev/mmcblk0p2")
 background_color_config = 255
 
 #page_mode and flag
-page_mode_val = 1
+page_mode_val = 0
 page_quantity = 3
 
 #button_val

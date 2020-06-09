@@ -73,14 +73,14 @@ class RaspberryPi:
         return 0
 
     def module_exit(self):
-        logging.debug("spi end")
-        self.SPI.close()
+        # logging.debug("spi end")
+        # self.SPI.close()
 
-        logging.debug("close 5V, Module enters 0 power consumption ...")
+        # logging.debug("close 5V, Module enters 0 power consumption ...")
         self.GPIO.output(self.RST_PIN, 0)
-        self.GPIO.output(self.DC_PIN, 0)
+        # self.GPIO.output(self.DC_PIN, 0)
 
-        self.GPIO.cleanup()
+        # self.GPIO.cleanup()
 
 
 class JetsonNano:
