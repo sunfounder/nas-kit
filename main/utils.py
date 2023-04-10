@@ -94,7 +94,7 @@ def cpu_temperature():          # cpu_temperature
     return cpu_temperature
 
 def gpu_temperature():          # gpu_temperature(
-    raw_gpu_temperature = subprocess.getoutput( '/opt/vc/bin/vcgencmd measure_temp' )
+    raw_gpu_temperature = subprocess.getoutput( 'vcgencmd measure_temp' )
     gpu_temperature = round(float(raw_gpu_temperature.replace( 'temp=', '' ).replace( '\'C', '' )), 1)
     gpu_temperature = str(gpu_temperature)
     return gpu_temperature
