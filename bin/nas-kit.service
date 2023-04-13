@@ -1,0 +1,11 @@
+[Unit]
+Description=SunFounder NAS Kit
+After=network.target
+
+[Service]
+ExecStart=sudo nas-kit start
+ExecStop=sudo nas-kit stop
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
