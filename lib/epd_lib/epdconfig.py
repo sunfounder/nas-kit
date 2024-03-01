@@ -6,7 +6,7 @@
 # *----------------
 # * | This version:   V1.0
 # * | Date        :   2019-06-21
-# * | Info        :   
+# * | Info        :
 # ******************************************************************************
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -35,10 +35,10 @@ import time
 
 class RaspberryPi:
     # Pin definition
-    RST_PIN         = 17
-    DC_PIN          = 25
-    CS_PIN          = 8
-    BUSY_PIN        = 24
+    RST_PIN = 17
+    DC_PIN = 25
+    CS_PIN = 8
+    BUSY_PIN = 24
 
     def __init__(self):
         import spidev
@@ -85,10 +85,10 @@ class RaspberryPi:
 
 class JetsonNano:
     # Pin definition
-    RST_PIN         = 17
-    DC_PIN          = 25
-    CS_PIN          = 8
-    BUSY_PIN        = 24
+    RST_PIN = 17
+    DC_PIN = 25
+    CS_PIN = 8
+    BUSY_PIN = 24
 
     def __init__(self):
         import ctypes
@@ -142,13 +142,29 @@ class JetsonNano:
         self.GPIO.cleanup()
 
 
-if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'):
+def check_devices():
+    with open('/proc/device-tree/model', 'r') as f:
+        model = f.read()
+        if 'Raspberry Pi' in model:
+            return "Raspberry Pi"
+        elif 'Jetson' in model:
+            return "Jetson"
+        else:
+            return model
+
+
+model = check_devices()
+if model == 'Raspberry Pi':
     implementation = RaspberryPi()
-else:
+    print(f'model: Raspberry Pi')
+elif model == 'Jetson':
+    print(f'model: Jetson')
     implementation = JetsonNano()
+else:
+    print(f'Unsupported model: {model}')
+    sys.exit(1)
 
 for func in [x for x in dir(implementation) if not x.startswith('_')]:
     setattr(sys.modules[__name__], func, getattr(implementation, func))
-
 
 ### END OF FILE ###
