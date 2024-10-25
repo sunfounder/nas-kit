@@ -1,5 +1,5 @@
 #!/bin/bash
-username=$(cat /etc/passwd |grep home | awk -F: '{print $1}')
+username=$(getent passwd 1000 | cut -d: -f1)
 echo "usernam:"$username
 
 case "$1" in
